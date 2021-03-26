@@ -1,11 +1,11 @@
-const sveltePreprocess = require("svelte-preprocess");
+const sveltePreprocess = require('svelte-preprocess')
 
 const preprocess = sveltePreprocess({
   postcss: {
-    plugins: [require("tailwindcss")],
+    plugins: [require('tailwindcss')],
   },
-});
+})
 
 module.exports = {
   preprocess,
-};
+}
