@@ -1,5 +1,5 @@
 <script>
-  import { start } from './stores'
+  import { start, slice } from '../stores'
 
   export let project
 
@@ -7,13 +7,15 @@
 
   $: graph = generate(project)
 
+  $: points = Object.keys(graph).map((k) => graph[k])
+
   function generate({ stagedAssets, connections }) {
     let assetsTo = Object.keys(stagedAssets).reduce(
-      (a, n, i) => (a[n] = { id: n, children: [] }) && a,
+      (a, n, i) => (a[n] = { id: n, children: [], type: 'a' }) && a,
       {}
     )
     let connectsTo = Object.keys(connections).reduce(
-      (a, n, i) => (a[n] = { id: n, children: [] }) && a,
+      (a, n, i) => (a[n] = { id: n, children: [], type: 'c' }) && a,
       {}
     )
     let nodesTo = Object.assign({}, assetsTo, connectsTo)
@@ -36,14 +38,19 @@
   <span class="p-1">{Object.entries(project.connections).length}</span>
 </div>
 
-{#each Object.entries(graph) as [id, node]}
+{#each points.filter((p) => p.type == 'a') as node}
   <div
     class="hover:bg-gray-300 cursor-pointer"
-    on:click={() => changeStart(id)}
+    on:click={() => changeStart(node.id)}
   >
-    <span>{node.id.slice(-1)}</span>
-    {#if node.children}
-      <span> --> {node.children.map((c) => c.slice(-1)).join(', ')}</span>
+    <span>{node.id.slice(-$slice)}</span>
+    {#if node.children.length}
+      <span class="px-3">
+        ->
+        {#each node.children.map((c) => c.slice(-$slice)) as node}
+          <span class="mx-1 px-1 border border-gray-300">{node}</span>
+        {/each}
+      </span>
     {/if}
   </div>
 {:else}

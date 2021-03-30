@@ -4,8 +4,7 @@
 
   import './Tailwind.svelte'
   import { project, start } from './stores'
-  import GraphPath from './GraphPath.svelte'
-  import AssetsGraph from './AssetsGraph.svelte'
+  import ProjectGraph from './graph/ProjectGraph'
 
   import ExampleJson from './project-idx.json'
   // to env
@@ -15,8 +14,6 @@
   let token
 
   $start = '-MA1551S-odms4rVbJ8K'
-
-  let graph
 
   // $: debugger;
   $: if (!$project && token) {
@@ -58,26 +55,21 @@
       .then((json) => ($project = json))
   }
 
+  /* call demo for dev mode useDemo() */
   onMount(() => {})
 </script>
 
 <div class="text-align-center antialiased w-full h-full p-4">
   <header>
     {#if token}
-      <div class="flex justify-between container mx-auto px-4 space-x-4">
-        {#if $project}
-          <div class="flex-1">
-            <AssetsGraph project={$project} bind:graph />
-          </div>
-        {/if}
-
-        <div class="flex-1 bg-blue-100">
-          <GraphPath {graph} />
-        </div>
-      </div>
+      {#if $project}
+        <ProjectGraph />
+      {:else}
+        <p>retrieving data...</p>
+      {/if}
     {:else}
       <div class="flex">
-        token:<input type="text" bind:value={token} />
+        copy token:<input type="text" bind:value={token} />
         <p
           class="no-underline hover:underline cursor-pointer"
           on:click={useDemo}

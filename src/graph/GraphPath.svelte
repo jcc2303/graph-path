@@ -1,5 +1,5 @@
 <script>
-  import { start } from './stores'
+  import { start, slice } from '../stores'
   import { onMount } from 'svelte'
 
   export let graph
@@ -25,13 +25,13 @@
 <div class="w-full">
   <div>
     <div class="text-lg">Graph path</div>
-    <span>start: {$start.slice(-1)}</span>
+    <span>start: {$start.slice(-$slice)}</span>
   </div>
 
   <div>
     {#each paths as path}
       <div>
-        {path.map((x) => x.slice(-1)).join(' > ')}
+        {path.map((x) => x.slice(-$slice)).join(' > ')}
       </div>
     {:else}
       <p>empty paths</p>

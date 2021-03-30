@@ -1,6 +1,7 @@
-# New Project
+# fieldap graph and path
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+> Example for calling api, processing data and showing graph and path
+
 
 ## Available Scripts
 
@@ -17,7 +18,12 @@ You will also see any lint errors in the console.
 Builds a static copy of your site to the `build/` folder.
 Your app is ready to be deployed!
 
-**For the best production performance:** Add a build bundler plugin like [@snowpack/plugin-webpack](https://github.com/snowpackjs/snowpack/tree/main/plugins/plugin-webpack) or [snowpack-plugin-rollup-bundle](https://github.com/ParamagicDev/snowpack-plugin-rollup-bundle) to your `snowpack.config.json` config file.
+
+
+
+
+**production performance:** 
+Added build bundler plugin [@snowpack/plugin-webpack](https://github.com/snowpackjs/snowpack/tree/main/plugins/plugin-webpack) 
 
 ### Q: What about Eject?
 
