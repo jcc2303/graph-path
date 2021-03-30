@@ -1,5 +1,10 @@
 function noop() {
 }
+function assign(tar, src) {
+  for (const k in src)
+    tar[k] = src[k];
+  return tar;
+}
 function run(fn) {
   return fn();
 }
@@ -27,6 +32,40 @@ function subscribe(store, ...callbacks) {
 }
 function component_subscribe(component, store, callback) {
   component.$$.on_destroy.push(subscribe(store, callback));
+}
+function create_slot(definition, ctx, $$scope, fn) {
+  if (definition) {
+    const slot_ctx = get_slot_context(definition, ctx, $$scope, fn);
+    return definition[0](slot_ctx);
+  }
+}
+function get_slot_context(definition, ctx, $$scope, fn) {
+  return definition[1] && fn ? assign($$scope.ctx.slice(), definition[1](fn(ctx))) : $$scope.ctx;
+}
+function get_slot_changes(definition, $$scope, dirty, fn) {
+  if (definition[2] && fn) {
+    const lets = definition[2](fn(dirty));
+    if ($$scope.dirty === void 0) {
+      return lets;
+    }
+    if (typeof lets === "object") {
+      const merged = [];
+      const len = Math.max($$scope.dirty.length, lets.length);
+      for (let i = 0; i < len; i += 1) {
+        merged[i] = $$scope.dirty[i] | lets[i];
+      }
+      return merged;
+    }
+    return $$scope.dirty | lets;
+  }
+  return $$scope.dirty;
+}
+function update_slot(slot, slot_definition, ctx, $$scope, dirty, get_slot_changes_fn, get_slot_context_fn) {
+  const slot_changes = get_slot_changes(slot_definition, $$scope, dirty, get_slot_changes_fn);
+  if (slot_changes) {
+    const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
+    slot.p(slot_context, slot_changes);
+  }
 }
 function set_store_value(store, ret, value = ret) {
   store.set(value);
@@ -79,6 +118,9 @@ function set_data(text2, data) {
 }
 function set_input_value(input, value) {
   input.value = value == null ? "" : value;
+}
+function set_style(node, key, value, important) {
+  node.style.setProperty(key, value, important ? "important" : "");
 }
 let current_component;
 function set_current_component(component) {
@@ -189,6 +231,7 @@ function transition_out(block, local, detach2, callback) {
     block.o(local);
   }
 }
+const globals = typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : global;
 function bind(component, name, callback) {
   const index = component.$$.props[name];
   if (index !== void 0) {
@@ -305,4 +348,4 @@ class SvelteComponent {
   }
 }
 
-export { destroy_each as A, empty as B, set_data as C, SvelteComponent as S, add_flush_callback as a, append as b, attr as c, bind as d, binding_callbacks as e, check_outros as f, component_subscribe as g, create_component as h, destroy_component as i, detach as j, element as k, group_outros as l, init as m, insert as n, onMount as o, listen as p, mount_component as q, noop as r, run_all as s, safe_not_equal as t, set_input_value as u, set_store_value as v, space as w, text as x, transition_in as y, transition_out as z };
+export { binding_callbacks as A, create_slot as B, globals as C, set_style as D, update_slot as E, add_flush_callback as F, bind as G, SvelteComponent as S, append as a, attr as b, check_outros as c, component_subscribe as d, create_component as e, destroy_component as f, detach as g, element as h, empty as i, group_outros as j, init as k, insert as l, listen as m, mount_component as n, onMount as o, noop as p, set_input_value as q, run_all as r, safe_not_equal as s, set_store_value as t, space as u, text as v, transition_in as w, transition_out as x, destroy_each as y, set_data as z };
