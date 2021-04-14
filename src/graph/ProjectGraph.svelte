@@ -1,4 +1,8 @@
 <script>
+  /**
+   * Container for all project and config for other components
+   */
+
   import { onMount } from 'svelte'
   import { project, start, slice } from '../stores'
 
@@ -17,6 +21,9 @@
   let assets = getAssets($project)
   let connections = getConnections($project)
 
+  /**
+   * Define the canvas side and do redimension for stagedAssets for canvas
+   */
   function getAssets({ stagedAssets }) {
     let xs = [],
       ys = []
@@ -36,6 +43,9 @@
     }))
   }
 
+  /**
+   * Do the redimension for connections for canvas
+   */
   function getConnections({ connections }) {
     let dicAssets = assets.reduce((a, c) => (a[c.key] = c) && a, {})
 

@@ -9,6 +9,9 @@
 
   $: points = Object.keys(graph).map((k) => graph[k])
 
+  /**
+   * generate a graph from stagedAssets, connections of project
+   */
   function generate({ stagedAssets, connections }) {
     let assetsTo = Object.keys(stagedAssets).reduce(
       (a, n, i) => (a[n] = { id: n, children: [], type: 'a' }) && a,
@@ -23,7 +26,6 @@
       nodesTo[from].children = [...nodesTo[from].children, id]
       nodesTo[id].children = [...nodesTo[id].children, to]
     })
-    // let nodeFrom = [] // Object.entries(stagedAssets).map(([id, value]) => value.connectionsAsFrom )
     return nodesTo
   }
 

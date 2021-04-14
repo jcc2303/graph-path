@@ -1,4 +1,8 @@
 <script>
+  /**
+   * canvas to be shared with other components
+   */
+
   import { onMount } from 'svelte'
   import {
     width,

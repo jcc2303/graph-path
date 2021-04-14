@@ -1,4 +1,8 @@
 <script>
+  /**
+   * Paint connections on canvas
+   */
+
   import { onMount } from 'svelte'
 
   import {

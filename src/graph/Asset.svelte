@@ -1,4 +1,7 @@
 <script>
+  /**
+   * Paint the redimensioned stagedAsset on canvas
+   */
   import { onMount } from 'svelte'
 
   import {

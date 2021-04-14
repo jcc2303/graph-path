@@ -8,6 +8,9 @@
 
   let paths = []
 
+  /**
+   * traverse the graph to discover all the path from any starting point
+   */
   function traverse(node = graph[$start], path = []) {
     if (path.includes(node.id)) return path
     path = [...path, node.id]
