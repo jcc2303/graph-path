@@ -85,7 +85,7 @@ function create_else_block_1(ctx) {
 	};
 }
 
-// (64:4) {#if token}
+// (65:4) {#if token}
 function create_if_block(ctx) {
 	let current_block_type_index;
 	let if_block;
@@ -153,7 +153,7 @@ function create_if_block(ctx) {
 	};
 }
 
-// (67:6) {:else}
+// (68:6) {:else}
 function create_else_block(ctx) {
 	let p;
 
@@ -173,7 +173,7 @@ function create_else_block(ctx) {
 	};
 }
 
-// (65:6) {#if $project}
+// (66:6) {#if $project}
 function create_if_block_1(ctx) {
 	let projectgraph;
 	let current;
@@ -333,6 +333,7 @@ function instance($$self, $$props, $$invalidate) {
 
 	$$self.$$.update = () => {
 		if ($$self.$$.dirty & /*$project, token*/ 3) {
+			// $start = '-MA1551S-odms4rVbJ8V'
 			// $: debugger;
 			$: if (!$project && token) {
 				getProject();

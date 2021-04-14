@@ -19,6 +19,16 @@ function instance($$self, $$props, $$invalidate) {
 		context.beginPath();
 		context.moveTo(from.x, from.y);
 		context.lineTo(to.x, to.y);
+
+		// head
+		let headlen = 20; // length of head in pixels
+
+		let dx = to.x - from.x;
+		let dy = to.y - from.y;
+		let angle = Math.atan2(dy, dx);
+		context.lineTo(to.x - headlen * Math.cos(angle - Math.PI / 6), to.y - headlen * Math.sin(angle - Math.PI / 6));
+		context.moveTo(to.x, to.y);
+		context.lineTo(to.x - headlen * Math.cos(angle + Math.PI / 6), to.y - headlen * Math.sin(angle + Math.PI / 6));
 		context.stroke();
 	};
 

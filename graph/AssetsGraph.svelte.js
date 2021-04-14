@@ -23,18 +23,24 @@ import { start, slice } from "../stores.js";
 
 function get_each_context(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[8] = list[i];
+	child_ctx[9] = list[i];
+	return child_ctx;
+}
+
+function get_each_context_2(ctx, list, i) {
+	const child_ctx = ctx.slice();
+	child_ctx[9] = list[i];
 	return child_ctx;
 }
 
 function get_each_context_1(ctx, list, i) {
 	const child_ctx = ctx.slice();
-	child_ctx[8] = list[i];
+	child_ctx[9] = list[i];
 	return child_ctx;
 }
 
-// (58:0) {:else}
-function create_else_block(ctx) {
+// (72:0) {:else}
+function create_else_block_1(ctx) {
 	let p;
 
 	return {
@@ -51,21 +57,137 @@ function create_else_block(ctx) {
 	};
 }
 
-// (49:4) {#if node.children.length}
+// (59:2) {:else}
+function create_else_block(ctx) {
+	let div;
+	let span;
+	let t0_value = /*node*/ ctx[9].id.slice(-/*$slice*/ ctx[2]) + "";
+	let t0;
+	let t1;
+	let t2;
+	let if_block = /*node*/ ctx[9].children.length && create_if_block_2(ctx);
+
+	return {
+		c() {
+			div = element("div");
+			span = element("span");
+			t0 = text(t0_value);
+			t1 = space();
+			if (if_block) if_block.c();
+			t2 = space();
+			attr(div, "class", "bg-gray-400");
+		},
+		m(target, anchor) {
+			insert(target, div, anchor);
+			append(div, span);
+			append(span, t0);
+			append(div, t1);
+			if (if_block) if_block.m(div, null);
+			append(div, t2);
+		},
+		p(ctx, dirty) {
+			if (dirty & /*points, $slice*/ 6 && t0_value !== (t0_value = /*node*/ ctx[9].id.slice(-/*$slice*/ ctx[2]) + "")) set_data(t0, t0_value);
+
+			if (/*node*/ ctx[9].children.length) {
+				if (if_block) {
+					if_block.p(ctx, dirty);
+				} else {
+					if_block = create_if_block_2(ctx);
+					if_block.c();
+					if_block.m(div, t2);
+				}
+			} else if (if_block) {
+				if_block.d(1);
+				if_block = null;
+			}
+		},
+		d(detaching) {
+			if (detaching) detach(div);
+			if (if_block) if_block.d();
+		}
+	};
+}
+
+// (44:2) {#if node.type == 'a'}
 function create_if_block(ctx) {
+	let div;
+	let span;
+	let t0_value = /*node*/ ctx[9].id.slice(-/*$slice*/ ctx[2]) + "";
+	let t0;
+	let t1;
+	let t2;
+	let mounted;
+	let dispose;
+	let if_block = /*node*/ ctx[9].children.length && create_if_block_1(ctx);
+
+	function click_handler() {
+		return /*click_handler*/ ctx[6](/*node*/ ctx[9]);
+	}
+
+	return {
+		c() {
+			div = element("div");
+			span = element("span");
+			t0 = text(t0_value);
+			t1 = space();
+			if (if_block) if_block.c();
+			t2 = space();
+			attr(div, "class", "hover:bg-gray-300 cursor-pointer");
+		},
+		m(target, anchor) {
+			insert(target, div, anchor);
+			append(div, span);
+			append(span, t0);
+			append(div, t1);
+			if (if_block) if_block.m(div, null);
+			append(div, t2);
+
+			if (!mounted) {
+				dispose = listen(div, "click", click_handler);
+				mounted = true;
+			}
+		},
+		p(new_ctx, dirty) {
+			ctx = new_ctx;
+			if (dirty & /*points, $slice*/ 6 && t0_value !== (t0_value = /*node*/ ctx[9].id.slice(-/*$slice*/ ctx[2]) + "")) set_data(t0, t0_value);
+
+			if (/*node*/ ctx[9].children.length) {
+				if (if_block) {
+					if_block.p(ctx, dirty);
+				} else {
+					if_block = create_if_block_1(ctx);
+					if_block.c();
+					if_block.m(div, t2);
+				}
+			} else if (if_block) {
+				if_block.d(1);
+				if_block = null;
+			}
+		},
+		d(detaching) {
+			if (detaching) detach(div);
+			if (if_block) if_block.d();
+			mounted = false;
+			dispose();
+		}
+	};
+}
+
+// (62:6) {#if node.children.length}
+function create_if_block_2(ctx) {
 	let span;
 	let t;
-	let each_value_1 = /*node*/ ctx[8].children.map(/*func_1*/ ctx[5]);
+	let each_value_2 = /*node*/ ctx[9].children.map(/*func_1*/ ctx[7]);
 	let each_blocks = [];
 
-	for (let i = 0; i < each_value_1.length; i += 1) {
-		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+	for (let i = 0; i < each_value_2.length; i += 1) {
+		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
 	}
 
 	return {
 		c() {
 			span = element("span");
-			t = text("->\n        ");
+			t = text("->\n          ");
 
 			for (let i = 0; i < each_blocks.length; i += 1) {
 				each_blocks[i].c();
@@ -83,7 +205,93 @@ function create_if_block(ctx) {
 		},
 		p(ctx, dirty) {
 			if (dirty & /*points, $slice*/ 6) {
-				each_value_1 = /*node*/ ctx[8].children.map(/*func_1*/ ctx[5]);
+				each_value_2 = /*node*/ ctx[9].children.map(/*func_1*/ ctx[7]);
+				let i;
+
+				for (i = 0; i < each_value_2.length; i += 1) {
+					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+					if (each_blocks[i]) {
+						each_blocks[i].p(child_ctx, dirty);
+					} else {
+						each_blocks[i] = create_each_block_2(child_ctx);
+						each_blocks[i].c();
+						each_blocks[i].m(span, null);
+					}
+				}
+
+				for (; i < each_blocks.length; i += 1) {
+					each_blocks[i].d(1);
+				}
+
+				each_blocks.length = each_value_2.length;
+			}
+		},
+		d(detaching) {
+			if (detaching) detach(span);
+			destroy_each(each_blocks, detaching);
+		}
+	};
+}
+
+// (65:10) {#each node.children.map((c) => c.slice(-$slice)) as node}
+function create_each_block_2(ctx) {
+	let span;
+	let t_value = /*node*/ ctx[9] + "";
+	let t;
+
+	return {
+		c() {
+			span = element("span");
+			t = text(t_value);
+			attr(span, "class", "mx-1 px-1 border border-gray-300");
+		},
+		m(target, anchor) {
+			insert(target, span, anchor);
+			append(span, t);
+		},
+		p(ctx, dirty) {
+			if (dirty & /*points, $slice*/ 6 && t_value !== (t_value = /*node*/ ctx[9] + "")) set_data(t, t_value);
+		},
+		d(detaching) {
+			if (detaching) detach(span);
+		}
+	};
+}
+
+// (50:6) {#if node.children.length}
+function create_if_block_1(ctx) {
+	let span;
+	let t;
+	let each_value_1 = /*node*/ ctx[9].children.map(/*func*/ ctx[5]);
+	let each_blocks = [];
+
+	for (let i = 0; i < each_value_1.length; i += 1) {
+		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+	}
+
+	return {
+		c() {
+			span = element("span");
+			t = text("->\n          ");
+
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				each_blocks[i].c();
+			}
+
+			attr(span, "class", "px-3");
+		},
+		m(target, anchor) {
+			insert(target, span, anchor);
+			append(span, t);
+
+			for (let i = 0; i < each_blocks.length; i += 1) {
+				each_blocks[i].m(span, null);
+			}
+		},
+		p(ctx, dirty) {
+			if (dirty & /*points, $slice*/ 6) {
+				each_value_1 = /*node*/ ctx[9].children.map(/*func*/ ctx[5]);
 				let i;
 
 				for (i = 0; i < each_value_1.length; i += 1) {
@@ -112,10 +320,10 @@ function create_if_block(ctx) {
 	};
 }
 
-// (52:8) {#each node.children.map((c) => c.slice(-$slice)) as node}
+// (53:10) {#each node.children.map((c) => c.slice(-$slice)) as node}
 function create_each_block_1(ctx) {
 	let span;
-	let t_value = /*node*/ ctx[8] + "";
+	let t_value = /*node*/ ctx[9] + "";
 	let t;
 
 	return {
@@ -129,7 +337,7 @@ function create_each_block_1(ctx) {
 			append(span, t);
 		},
 		p(ctx, dirty) {
-			if (dirty & /*points, $slice*/ 6 && t_value !== (t_value = /*node*/ ctx[8] + "")) set_data(t, t_value);
+			if (dirty & /*points, $slice*/ 6 && t_value !== (t_value = /*node*/ ctx[9] + "")) set_data(t, t_value);
 		},
 		d(detaching) {
 			if (detaching) detach(span);
@@ -137,67 +345,43 @@ function create_each_block_1(ctx) {
 	};
 }
 
-// (43:0) {#each points.filter((p) => p.type == 'a') as node}
+// (43:0) {#each points as node}
 function create_each_block(ctx) {
-	let div;
-	let span;
-	let t0_value = /*node*/ ctx[8].id.slice(-/*$slice*/ ctx[2]) + "";
-	let t0;
-	let t1;
-	let t2;
-	let mounted;
-	let dispose;
-	let if_block = /*node*/ ctx[8].children.length && create_if_block(ctx);
+	let if_block_anchor;
 
-	function click_handler() {
-		return /*click_handler*/ ctx[6](/*node*/ ctx[8]);
+	function select_block_type(ctx, dirty) {
+		if (/*node*/ ctx[9].type == "a") return create_if_block;
+		return create_else_block;
 	}
+
+	let current_block_type = select_block_type(ctx, -1);
+	let if_block = current_block_type(ctx);
 
 	return {
 		c() {
-			div = element("div");
-			span = element("span");
-			t0 = text(t0_value);
-			t1 = space();
-			if (if_block) if_block.c();
-			t2 = space();
-			attr(div, "class", "hover:bg-gray-300 cursor-pointer");
+			if_block.c();
+			if_block_anchor = empty();
 		},
 		m(target, anchor) {
-			insert(target, div, anchor);
-			append(div, span);
-			append(span, t0);
-			append(div, t1);
-			if (if_block) if_block.m(div, null);
-			append(div, t2);
-
-			if (!mounted) {
-				dispose = listen(div, "click", click_handler);
-				mounted = true;
-			}
+			if_block.m(target, anchor);
+			insert(target, if_block_anchor, anchor);
 		},
-		p(new_ctx, dirty) {
-			ctx = new_ctx;
-			if (dirty & /*points, $slice*/ 6 && t0_value !== (t0_value = /*node*/ ctx[8].id.slice(-/*$slice*/ ctx[2]) + "")) set_data(t0, t0_value);
-
-			if (/*node*/ ctx[8].children.length) {
-				if (if_block) {
-					if_block.p(ctx, dirty);
-				} else {
-					if_block = create_if_block(ctx);
-					if_block.c();
-					if_block.m(div, t2);
-				}
-			} else if (if_block) {
+		p(ctx, dirty) {
+			if (current_block_type === (current_block_type = select_block_type(ctx, dirty)) && if_block) {
+				if_block.p(ctx, dirty);
+			} else {
 				if_block.d(1);
-				if_block = null;
+				if_block = current_block_type(ctx);
+
+				if (if_block) {
+					if_block.c();
+					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+				}
 			}
 		},
 		d(detaching) {
-			if (detaching) detach(div);
-			if (if_block) if_block.d();
-			mounted = false;
-			dispose();
+			if_block.d(detaching);
+			if (detaching) detach(if_block_anchor);
 		}
 	};
 }
@@ -215,7 +399,7 @@ function create_fragment(ctx) {
 	let t4;
 	let t5;
 	let each_1_anchor;
-	let each_value = /*points*/ ctx[1].filter(func);
+	let each_value = /*points*/ ctx[1];
 	let each_blocks = [];
 
 	for (let i = 0; i < each_value.length; i += 1) {
@@ -225,7 +409,7 @@ function create_fragment(ctx) {
 	let each_1_else = null;
 
 	if (!each_value.length) {
-		each_1_else = create_else_block(ctx);
+		each_1_else = create_else_block_1(ctx);
 	}
 
 	return {
@@ -282,7 +466,7 @@ function create_fragment(ctx) {
 			if (dirty & /*project*/ 1 && t4_value !== (t4_value = Object.entries(/*project*/ ctx[0].connections).length + "")) set_data(t4, t4_value);
 
 			if (dirty & /*changeStart, points, $slice*/ 14) {
-				each_value = /*points*/ ctx[1].filter(func);
+				each_value = /*points*/ ctx[1];
 				let i;
 
 				for (i = 0; i < each_value.length; i += 1) {
@@ -309,7 +493,7 @@ function create_fragment(ctx) {
 						each_1_else = null;
 					}
 				} else if (!each_1_else) {
-					each_1_else = create_else_block(ctx);
+					each_1_else = create_else_block_1(ctx);
 					each_1_else.c();
 					each_1_else.m(each_1_anchor.parentNode, each_1_anchor);
 				}
@@ -340,13 +524,11 @@ function generate({ stagedAssets, connections }) {
 	return nodesTo;
 }
 
-const func = p => p.type == "a";
-
 function instance($$self, $$props, $$invalidate) {
 	let points;
 	let $start;
 	let $slice;
-	component_subscribe($$self, start, $$value => $$invalidate(7, $start = $$value));
+	component_subscribe($$self, start, $$value => $$invalidate(8, $start = $$value));
 	component_subscribe($$self, slice, $$value => $$invalidate(2, $slice = $$value));
 	let { project } = $$props;
 	let { graph = [] } = $$props;
@@ -355,8 +537,9 @@ function instance($$self, $$props, $$invalidate) {
 		set_store_value(start, $start = id, $start);
 	}
 
-	const func_1 = c => c.slice(-$slice);
+	const func = c => c.slice(-$slice);
 	const click_handler = node => changeStart(node.id);
+	const func_1 = c => c.slice(-$slice);
 
 	$$self.$$set = $$props => {
 		if ("project" in $$props) $$invalidate(0, project = $$props.project);
@@ -373,7 +556,7 @@ function instance($$self, $$props, $$invalidate) {
 		}
 	};
 
-	return [project, points, $slice, changeStart, graph, func_1, click_handler];
+	return [project, points, $slice, changeStart, graph, func, click_handler, func_1];
 }
 
 class AssetsGraph extends SvelteComponent {
