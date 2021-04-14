@@ -25,7 +25,7 @@ function get_each_context(ctx, list, i) {
 	return child_ctx;
 }
 
-// (36:4) {:else}
+// (39:4) {:else}
 function create_else_block(ctx) {
 	let p;
 
@@ -43,7 +43,7 @@ function create_else_block(ctx) {
 	};
 }
 
-// (32:4) {#each paths as path}
+// (35:4) {#each paths as path}
 function create_each_block(ctx) {
 	let div;
 	let t0_value = /*path*/ ctx[6].map(/*func*/ ctx[4]).join(" > ") + "";
@@ -192,6 +192,9 @@ function instance($$self, $$props, $$invalidate) {
 	let { graph } = $$props;
 	let paths = [];
 
+	/**
+ * traverse the graph to discover all the path from any starting point
+ */
 	function traverse(node = graph[$start], path = []) {
 		if (path.includes(node.id)) return path;
 		path = [...path, node.id];

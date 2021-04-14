@@ -33,7 +33,7 @@ function get_each_context_1(ctx, list, i) {
 	return child_ctx;
 }
 
-// (56:0) {:else}
+// (58:0) {:else}
 function create_else_block(ctx) {
 	let p;
 
@@ -51,7 +51,7 @@ function create_else_block(ctx) {
 	};
 }
 
-// (47:4) {#if node.children.length}
+// (49:4) {#if node.children.length}
 function create_if_block(ctx) {
 	let span;
 	let t;
@@ -112,7 +112,7 @@ function create_if_block(ctx) {
 	};
 }
 
-// (50:8) {#each node.children.map((c) => c.slice(-$slice)) as node}
+// (52:8) {#each node.children.map((c) => c.slice(-$slice)) as node}
 function create_each_block_1(ctx) {
 	let span;
 	let t_value = /*node*/ ctx[8] + "";
@@ -137,7 +137,7 @@ function create_each_block_1(ctx) {
 	};
 }
 
-// (41:0) {#each points.filter((p) => p.type == 'a') as node}
+// (43:0) {#each points.filter((p) => p.type == 'a') as node}
 function create_each_block(ctx) {
 	let div;
 	let span;
@@ -337,7 +337,6 @@ function generate({ stagedAssets, connections }) {
 		nodesTo[id].children = [...nodesTo[id].children, to];
 	});
 
-	// let nodeFrom = [] // Object.entries(stagedAssets).map(([id, value]) => value.connectionsAsFrom )
 	return nodesTo;
 }
 

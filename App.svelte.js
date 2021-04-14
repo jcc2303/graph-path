@@ -32,7 +32,7 @@ import { project, start } from "./stores.js";
 import ProjectGraph from "./graph/ProjectGraph.svelte.js";
 import ExampleJson from "./project-idx.json.proxy.js";
 
-function create_else_block(ctx) {
+function create_else_block_1(ctx) {
 	let div;
 	let t0;
 	let input;
@@ -44,7 +44,7 @@ function create_else_block(ctx) {
 	return {
 		c() {
 			div = element("div");
-			t0 = text("token:");
+			t0 = text("copy token:");
 			input = element("input");
 			t1 = space();
 			p = element("p");
@@ -85,42 +85,56 @@ function create_else_block(ctx) {
 	};
 }
 
-// (65:4) {#if token}
+// (64:4) {#if token}
 function create_if_block(ctx) {
+	let current_block_type_index;
+	let if_block;
 	let if_block_anchor;
 	let current;
-	let if_block = /*$project*/ ctx[1] && create_if_block_1(ctx);
+	const if_block_creators = [create_if_block_1, create_else_block];
+	const if_blocks = [];
+
+	function select_block_type_1(ctx, dirty) {
+		if (/*$project*/ ctx[1]) return 0;
+		return 1;
+	}
+
+	current_block_type_index = select_block_type_1(ctx, -1);
+	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
 	return {
 		c() {
-			if (if_block) if_block.c();
+			if_block.c();
 			if_block_anchor = empty();
 		},
 		m(target, anchor) {
-			if (if_block) if_block.m(target, anchor);
+			if_blocks[current_block_type_index].m(target, anchor);
 			insert(target, if_block_anchor, anchor);
 			current = true;
 		},
 		p(ctx, dirty) {
-			if (/*$project*/ ctx[1]) {
-				if (if_block) {
-					if (dirty & /*$project*/ 2) {
-						transition_in(if_block, 1);
-					}
-				} else {
-					if_block = create_if_block_1(ctx);
-					if_block.c();
-					transition_in(if_block, 1);
-					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-				}
-			} else if (if_block) {
+			let previous_block_index = current_block_type_index;
+			current_block_type_index = select_block_type_1(ctx, dirty);
+
+			if (current_block_type_index !== previous_block_index) {
 				group_outros();
 
-				transition_out(if_block, 1, 1, () => {
-					if_block = null;
+				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+					if_blocks[previous_block_index] = null;
 				});
 
 				check_outros();
+				if_block = if_blocks[current_block_type_index];
+
+				if (!if_block) {
+					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+					if_block.c();
+				} else {
+					
+				}
+
+				transition_in(if_block, 1);
+				if_block.m(if_block_anchor.parentNode, if_block_anchor);
 			}
 		},
 		i(local) {
@@ -133,13 +147,33 @@ function create_if_block(ctx) {
 			current = false;
 		},
 		d(detaching) {
-			if (if_block) if_block.d(detaching);
+			if_blocks[current_block_type_index].d(detaching);
 			if (detaching) detach(if_block_anchor);
 		}
 	};
 }
 
-// (66:6) {#if $project}
+// (67:6) {:else}
+function create_else_block(ctx) {
+	let p;
+
+	return {
+		c() {
+			p = element("p");
+			p.textContent = "retrieving data...";
+		},
+		m(target, anchor) {
+			insert(target, p, anchor);
+		},
+		i: noop,
+		o: noop,
+		d(detaching) {
+			if (detaching) detach(p);
+		}
+	};
+}
+
+// (65:6) {#if $project}
 function create_if_block_1(ctx) {
 	let projectgraph;
 	let current;
@@ -174,7 +208,7 @@ function create_fragment(ctx) {
 	let current_block_type_index;
 	let if_block;
 	let current;
-	const if_block_creators = [create_if_block, create_else_block];
+	const if_block_creators = [create_if_block, create_else_block_1];
 	const if_blocks = [];
 
 	function select_block_type(ctx, dirty) {
@@ -287,8 +321,9 @@ function instance($$self, $$props, $$invalidate) {
 		fetch(`${url}/subProject/${subProjectId}`, options).then(response => response.json()).then(json => set_store_value(project, $project = json, $project));
 	}
 
+	/* call demo for dev mode useDemo() */
 	onMount(() => {
-		useDemo();
+		
 	});
 
 	function input_input_handler() {

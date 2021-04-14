@@ -47,7 +47,7 @@ function get_each_context_1(ctx, list, i) {
 	return child_ctx;
 }
 
-// (56:2) {#each connections as item}
+// (66:2) {#each connections as item}
 function create_each_block_1(ctx) {
 	let connection;
 	let current;
@@ -77,7 +77,7 @@ function create_each_block_1(ctx) {
 	};
 }
 
-// (59:2) {#each assets as item}
+// (69:2) {#each assets as item}
 function create_each_block(ctx) {
 	let asset;
 	let current;
@@ -107,7 +107,7 @@ function create_each_block(ctx) {
 	};
 }
 
-// (55:0) <Canvas>
+// (65:0) <Canvas>
 function create_default_slot(ctx) {
 	let t;
 	let each1_anchor;
@@ -398,6 +398,9 @@ function instance($$self, $$props, $$invalidate) {
 	let assets = getAssets($project);
 	let connections = getConnections($project);
 
+	/**
+ * Define the canvas side and do redimension for stagedAssets for canvas
+ */
 	function getAssets({ stagedAssets }) {
 		let xs = [], ys = [];
 		let entries = Object.entries(stagedAssets);
@@ -414,6 +417,9 @@ function instance($$self, $$props, $$invalidate) {
 		}));
 	}
 
+	/**
+ * Do the redimension for connections for canvas
+ */
 	function getConnections({ connections }) {
 		let dicAssets = assets.reduce((a, c) => (a[c.key] = c) && a, {});
 
